@@ -2,7 +2,7 @@
 <h2>Using HttpSender</h2>
 <p>
 	To use the HttpSender, instantiate it like so:<br>
-<code>
+<code><pre>
 use WAASender\HttpSender;
 
 $config=[
@@ -18,7 +18,7 @@ $tokens=[
 
 $sender= new HttpSender($config, $tokens);
 
-</code>
+</pre></code>
 
 
 </p>
@@ -100,7 +100,7 @@ Some accept 2 arguments ($url, $body)
 </ul>
 <h3>An Example Request</h3>
 <p>
-<code>use WAASender\HttpSender;
+<code><pre>use WAASender\HttpSender;
 
 $config=[
 	// associateive array of configs
@@ -115,9 +115,7 @@ $tokens=[
 
 $sender= new HttpSender($config, $tokens);
 
-$resp=$sender->None()->RetText()->Get('https://greggoad.net');
-
-</code>
+$resp=$sender->None()->RetText()->Get('https://greggoad.net');</pre></code>
 
 This example used no authorization, and would return text, and get the website!
 
@@ -149,10 +147,10 @@ method name (sans-underscore) onto <code>$this->retRespArray</code>
 	is a blogConfiguration static variable. It's a path to a json file that has the members:
 	
 </p>
-<code>"site"           - string - site root,
+<code><pre>"site"           - string - site root,
 "siteBlog"       - string - blog lister,
 "siteBlogViewer" - string - blog article viewer,	
-"imageFolder"    - string - file-system path to blog image parent folder</code>
+"imageFolder"    - string - file-system path to blog image parent folder</pre></code>
 <h3>Social Configurations</h3>
 <p>
 	The individual social configurations files (json) are in src/conf, along with the blog config.
