@@ -36,7 +36,6 @@ $sender= new HttpSender($config, $tokens);
 			<li>You can also set any config in your class extensions and they will be accessible through the Config function.</li>
 		</ul>
 	</li>
-	
 	<li><b>Tokens: </b><ul>
 		<li>bearer</li>
 		<li>consumerKey (oauth1)</li>
@@ -66,12 +65,10 @@ These configurations could be pre-set, but it's handy to be able to set them on 
 		<li>Json</li>
 		<li>MultiPart</li>
 	</ul></li>
-	
 	<li><b>Response Types</b><ul>
 		<li>RetText</li>
 		<li>RetJson</li>
 	</ul></li>
-	
 	<li><b>Authorizations</b><ul>
 		<li>None</li>
 		<li>Bearer</li>
