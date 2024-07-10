@@ -1,0 +1,11 @@
+{
+	"config":{
+		"active":false
+	},
+	"tokens":{
+		"accountId":"", 
+		"locationId":"",
+		"user":"",
+		"pass":""
+	}
+}

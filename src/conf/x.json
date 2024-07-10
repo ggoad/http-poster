@@ -1,0 +1,12 @@
+{
+	"config":{
+		"active":false
+	},
+	"tokens":{
+		"accessToken":"",
+		"accessSecret":"",
+
+		"consumerKey":"twitter app key",
+		"consumerSecret":"app secret"
+	}
+}

@@ -1,0 +1,9 @@
+{
+	"config":{
+		"active":false
+	},
+	"tokens":{
+		"pageId":"", 
+		"systemUserToken":""
+	}
+}
