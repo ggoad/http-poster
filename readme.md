@@ -52,9 +52,7 @@ $sender= new HttpSender($config, $tokens);
 <p>
 The configurations functions set a configuration, and then return a reference to itself. 
 This allows the configuration functions to be chained together, like so:
-<code><pre>
-$sender->Json()->Basic()->RetText();
-</pre></code>
+<code><pre>$sender->Json()->Basic()->RetText();</pre></code>
 This would configure the request to have a JSON body, using basic authorizaiton, and returning raw text as a response. 
 These configurations could be pre-set, but it's handy to be able to set them on the fly. 
 </p>
@@ -102,8 +100,7 @@ Some accept 2 arguments ($url, $body)
 </ul>
 <h3>An Example Request</h3>
 <p>
-<code><pre>
-use WAASender\HttpSender;
+<code><pre>use WAASender\HttpSender;
 
 $config=[
 	// associateive array of configs
@@ -133,12 +130,10 @@ However, the class 'SenderBlocker' is provided to fascilitate a locking behavior
 </p>
 <p>
 For instance: if you need to send multiple requests in a process, and one fails,
-you can call: <br><code>return $this->Eject('message');</code><br>, and it will return
+you can call: <code>return $this->Eject('message');</code>, and it will return
 the last failed response, with the special message added to the end.
-Or, your can call<br>
-<pre><code>
-$this->Eject('message');
-</code></pre><br>
+Or, your can call
+<pre><code>$this->Eject('message');</code></pre><br>
 and let execution continue along. All requests will fail, and the functions
 that return responses will just return the last failed or unacceptable response. 
 </p>
@@ -154,12 +149,10 @@ method name (sans-underscore) onto <code>$this->retRespArray</code>
 	is a blogConfiguration static variable. It's a path to a json file that has the members:
 	
 </p>
-<code><pre>
-"site"           - string - site root,
+<code><pre>"site"           - string - site root,
 "siteBlog"       - string - blog lister,
 "siteBlogViewer" - string - blog article viewer,	
-"imageFolder"    - string - file-system path to blog image parent folder
-</pre></code>
+"imageFolder"    - string - file-system path to blog image parent folder</pre></code>
 <h3>Social Configurations</h3>
 <p>
 	The individual social configurations files (json) are in src/conf, along with the blog config.
