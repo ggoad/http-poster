@@ -181,6 +181,6 @@ $fbSender= new FacebookSender();
 
 $resp=$fbSender->Upload($postData);
 
-echo "<pre>".json_encode($resp, JSON_PRETTY_PRINT)."</pre>";
+echo "&lt;pre&gt;".json_encode($resp, JSON_PRETTY_PRINT)."&lt;/pre&gt;";
 </pre>
 <h2>Happy Posting</h2>

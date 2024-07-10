@@ -27,12 +27,12 @@ class FacebookSender extends SocialPoster{
 		);
 		
 	}
-	protected function _Update($postData, $needsScrape=false){
+	protected function _Update($postData){
 		$pageId=$this->Token('pageId');
 		$requestBody=$this->ComposeRequestBody($postData);
 		
 		
-		if($needsScrape){
+		if($postData['needsScrape'] ?? false){
 			$this->Get("https://graph.facebook.com",[
 				'id'=>$requestBody['link'],
 				'scrape'=>'true',
