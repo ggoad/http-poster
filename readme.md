@@ -3,6 +3,7 @@
 <p>
 	To use the HttpSender, instantiate it like so:<br>
 <pre>
+require_once("src/httpSender.php");
 use WAASender\HttpSender;
 
 $config=[
@@ -100,7 +101,11 @@ Some accept 2 arguments ($url, $body)
 </ul>
 <h3>An Example Request</h3>
 <p>
-<pre>use WAASender\HttpSender;
+<pre>
+
+require_once("src/httpSender.php")
+
+use WAASender\HttpSender;
 
 $config=[
 	// associateive array of configs
@@ -147,12 +152,35 @@ method name (sans-underscore) onto <code>$this->retRespArray</code>
 	is a blogConfiguration static variable. It's a path to a json file that has the members:
 	
 </p>
-<pre>"site"           - string - site root,
+<pre>
+"site"           - string - site root,
 "siteBlog"       - string - blog lister,
 "siteBlogViewer" - string - blog article viewer,	
-"imageFolder"    - string - file-system path to blog image parent folder</pre>
+"imageFolder"    - string - file-system path to blog image parent folder
+</pre>
 <h3>Social Configurations</h3>
 <p>
 	The individual social configurations files (json) are in src/conf, along with the blog config.
 </p>
+<h3>Social Example</h3>
+<pre>
+
+require_once("src/facebookSender.php")
+
+use WAASender\FacebookSender;
+
+$postData=[
+	"content"=>"Happy Valentines Day",
+	"slug"=>"Valentine-Love"
+];
+
+
+$fbSender= new FacebookSender();
+
+// make the post
+
+$resp=$fbSender->Upload($postData);
+
+echo "<pre>".json_encode($resp, JSON_PRETTY_PRINT)."</pre>";
+</pre>
 <h2>Happy Posting</h2>
