@@ -24,16 +24,18 @@ $sender= new HttpSender($config, $tokens);
 </p>
 <h3>Configurations and Tokens</h3>
 <ul>
-	<li><b>Configurations: </b><ul>
-		<li>timeout: Wait time for response</li>
-		<li>userAgent: UA to send with request </li>
-		<li>contentType: encoding of request body</li>
-		<li>authorization: type of authorization</li>
-		<li>sinatureMethod: for Oauth</li>
-		<li>retType: type of expected resonse</li>
-		<li>There are others, that are set by the Go method</li>
-		<li>You can also set any config in your class extensions and they will be accessible through the Config function.</li>
-	</ul></li>
+	<li><b>Configurations: </b>
+		<ul>
+			<li>timeout: Wait time for response</li>
+			<li>userAgent: UA to send with request </li>
+			<li>contentType: encoding of request body</li>
+			<li>authorization: type of authorization</li>
+			<li>sinatureMethod: for Oauth</li>
+			<li>retType: type of expected resonse</li>
+			<li>There are others, that are set by the Go method</li>
+			<li>You can also set any config in your class extensions and they will be accessible through the Config function.</li>
+		</ul>
+	</li>
 	
 	<li><b>Tokens: </b><ul>
 		<li>bearer</li>
