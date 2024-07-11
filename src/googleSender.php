@@ -8,17 +8,17 @@ class GoogleSender extends SocialPoster{
 		parent::__construct($credFile,[
 			'retType'=>'json',
 			'authorization'=>'basic'
+		],[],[
+			'upload'=>"https://mybusiness.googleapis.com/v4/accounts/{#TOKEN-accountId}/locations/{#TOKEN-locationId}/localPosts",
+			'update'=>"https://mybusiness.googleapis.com/v4/accounts/{#TOKEN-accountId}/locations/{#TOKEN-locationId}/localPosts/{#0-postId}",
+			'delete'=>"https://mybusiness.googleapis.com/v4/accounts/{#TOKEN-accountId}/locations/{#TOKEN-locationId}/localPosts/{#0-postId}"
 		]);
 	}
 	
 	protected function _Upload($postData){
-		$accountId=$this->Token('accountId');
-		$locationId=$this->Token('locationId');
-		
-		
 		
 		return $this->Post(
-			"https://mybusiness.googleapis.com/v4/accounts/$accountId/locations/$locationId/localPosts",
+			$this->Endpoint('upload'),
 			$this->GenerateRequestBody($postData, true)
 		);
 
@@ -26,25 +26,21 @@ class GoogleSender extends SocialPoster{
 	}
 	
 	protected function _Update($postData){
-		$postId=$postData['postId'];
-		$accountId=$this->Token('accountId');
-		$locationId=$this->Token('locationId');
 		
-		
-		
-		return $this->Patch(
-			"https://mybusiness.googleapis.com/v4/accounts/$accountId/locations/$locationId/localPosts/$postId?updateMask=summary,callToAction,media",
+		return $this->ParamArray([
+			'updateMask'=>'summary,callToAction,media'
+		])->Patch(
+			$this->Endpoint('update',$postData['postId']),
 			$this->GenerateRequestBody($postData)
 		);
+		
 	}
 	protected function _Remove($postData){
-		$postId=$postData['postId'];
-		$accountId=$this->Token('accountId');
-		$locationId=$this->Token('locationId');
 		
 		return $this->Delete(
-			"https://mybusiness.googleapis.com/v4/accounts/$accountId/locations/$locationId/localPosts/$postId"
+			$this->Endpoint('delete',$postData['postId'])
 		);
+		
 	}
 	
 	protected function GenerateRequestBody($postData, $init=false){

@@ -22,6 +22,10 @@ class XSender extends SocialPoster{
 		parent::__construct($credFile,[
 			'authorization'=>'oauth1',
 			'retType'=>'json'
+		],[],[
+			'imageUpload'=>"https://upload.twitter.com/1.1/media/upload.json",
+			'upload'=>"https://api.twitter.com/2/tweets",
+			'delete'=>"https://api.twitter.com/2/tweets/{#0-postId}" 
 		]);
 	}
 	protected function _Update($postData){
@@ -37,23 +41,23 @@ class XSender extends SocialPoster{
 				]
 			];
 			$resp=$this->MultiPart()->Post(
-				"https://upload.twitter.com/1.1/media/upload.json",
+				$this->Endpoint('imageUpload'),
 				[],
 				$bodyFiles
 			);
 			
 			if(!($resp['resp']['media_id'] ?? false)){
-				return(($this->Eject('Media upload fail')));
+				return $this->Eject('Media upload fail');
 			}
 			$postData['xMediaId']=$resp['resp']['media_id'];
 		}
 		$body=$this->CalculateRequestBody($postData);
 		
-		return $this->Json()->Post("https://api.twitter.com/2/tweets",$body);
+		return $this->Json()->Post($this->Endpoint('upload'),$body);
 		
 	}
 	protected function _Remove($postData){
-		return $this->Delete("https://api.twitter.com/2/tweets/$postData[postId]");
+		return $this->Delete($this->Endpoint('delete', $postData['postId']));
 	}
 	protected function CalculateRequestBody($postData){
 		$ret= [

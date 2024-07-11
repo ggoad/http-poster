@@ -22,10 +22,10 @@ class FacebookSender extends SocialPoster{
 		],[],[
 			'upload'=>"https://graph.facebook.com/{#CONFIG-version}/{#TOKEN-pageId}/feed",
 			'scrape'=>"https://graph.facebook.com",
-			'update'=>"https://graph.facebook.com/{#CONFIG-version}/{#0}", // #0 is a post id
-			'remove'=>"https://graph.facebook.com/{#CONFIG-version}/{#0}",
+			'update'=>"https://graph.facebook.com/{#CONFIG-version}/{#0-postId}",
+			'remove'=>"https://graph.facebook.com/{#CONFIG-version}/{#0-postId}",
 			'me'=>"https://graph.facebook.com/{#CONFIG-version}/me/accounts"
-		];
+		]);
 		
 	}
 	
@@ -37,7 +37,6 @@ class FacebookSender extends SocialPoster{
 		
 	}
 	protected function _Update($postData){
-		$pageId=$this->Token('pageId');
 		$requestBody=$this->ComposeRequestBody($postData);
 		
 		
@@ -51,14 +50,15 @@ class FacebookSender extends SocialPoster{
 		
 		
 		return $this->Post(
-			$this->Endpoint('update',[$postData['postId']]),
+			$this->Endpoint('update',$postData['postId']),
 			$requestBody
 		);
 		
 	}
 	protected function _Remove($postData){
 		$resp=$this->Delete(
-			$this->Endpoint('remove', [$postData['postId']]),[
+			$this->Endpoint('remove', $postData['postId']),
+			[
 				'access_token'=>$this->GetAccessToken()
 			]
 		);

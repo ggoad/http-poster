@@ -43,9 +43,11 @@ class HttpSender{
 	// Get Parameteres
 	public function ParamArray($arr){
 		$this->Config(['paramArray'=>$arr]);
+		return $this;
 	}
 	public function ParamAppend($str){
 		$this->Config(['paramAppend'=>$str]);
+		return $this;
 	}
 	
 	// Content Types
@@ -218,19 +220,31 @@ class HttpSender{
 			$sArr[]="{#CONFIG-$k}";
 			$rArr[]=$v;
 		}
+		
+		$psArr=[];
+		$prArr=[];
+		
 		foreach($args as $k=>$v)
 		{
-			$sArr[]="{#$k}";
-			$rArr[]=$v;
+			if(filter_var($k, FILTER_VALIDATE_INT) !== false){
+				$psArr[]="/{#$k-[A-Za-z0-9\-_]*}/";
+			}else{
+				$psArr[]="/{#[0-9]+-$k}/";
+			}
+			$prArr[]=$v;
 		}
 		
-		return str_replace($sArr, $rArr,$endpoint);
+		
+		return preg_replace($psArr,$prArr,str_replace($sArr, $rArr,$endpoint));
 	}
-	public function Endpoint($oper=null, $args=[]){
+	public function Endpoint($oper=null, ...$args){
 		switch(gettype($oper)){
 			case "string":
 				if($oper === 'defaultEndpoints'){return $this->endp[$oper];}
-				return $this->EndpointInterpolation($this->endp[$oper],$args);
+				return $this->EndpointInterpolation(
+					$this->endp[$oper],
+					(gettype($args[0] ?? '') === 'array' ? $args[0] : $args)
+				);
 				break;
 			case "array":
 				foreach($oper as $k=>$v)

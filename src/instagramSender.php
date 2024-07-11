@@ -17,7 +17,12 @@ class InstagramSender extends SocialPoster{
 		array_push($this->retRespArr, "Publish");
 		
 		parent::__construct($credFile,[
-			'retType'=>'json'
+			'retType'=>'json',
+			"version"=>"v20.0"
+		],[],[
+			'upload'=>"https://graph.facebook.com/{#CONFIG-version}/{#TOKEN-pageId}/media",
+			'status'=>"https://graph.facebook.com/{#CONFIG-version}/{#0-postId}/", 
+			'publish'=>"https://graph.facebook.com/{#CONFIG-version}/{#TOKEN-pageId}/media_publish"
 		]);
 	}
 	
@@ -30,12 +35,12 @@ class InstagramSender extends SocialPoster{
 			'access_token'=>$this->Token('systemUserToken')
 		];
 		
-		return $this->Post("https://graph.facebook.com/v20.0/$pId/media",$body);
+		return $this->Post($this->Endpoint('upload'),$body);
 	}
 	protected function _Publish($postData){
 		$pId=$this->Token('pageId');
 		
-		$resp=$this->Get("https://graph.facebook.com/v20.0/$postData[postId]/",[
+		$resp=$this->Get($this->Endpoint('status',$postData['postId']),[
 			"fields"=>"status_code",
 			"access_token"=>$this->Token("systemUserToken")
 		]);
@@ -50,7 +55,7 @@ class InstagramSender extends SocialPoster{
 			return $this->Eject("Post not finished processing");
 		}
 		
-		return $this->Post("https://graph.facebook.com/v20.0/$pId/media_publish",[
+		return $this->Post($this->Endpoint('publish'),[
 			'creation_id'=>$postData['postId'],
 			'access_token'=>$this->Token('systemUserToken')
 		]);
