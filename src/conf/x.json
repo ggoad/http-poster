@@ -8,5 +8,9 @@
 
 		"consumerKey":"twitter app key",
 		"consumerSecret":"app secret"
+	},
+	"endpoints":{
+		
 	}
+
 }

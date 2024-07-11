@@ -5,11 +5,13 @@ namespace WAASender;
 require_once("httpSender.php");
 class SenderBlocker{
 	
-	function __construct($conf=[], $tok=[]){
+	function __construct($conf=[], $tok=[],$endp=[]){
 		$this->nullClass=new NullClass($this);
 		
-		$this->sender=new HttpSender($conf,$tok);
+		$this->sender=new HttpSender($conf,$tok,$endp);
 	}
+	
+	use Phased;
 	
 	protected $nullClass;
 	protected $sender;
@@ -37,6 +39,7 @@ class SenderBlocker{
 		
 		// checks for underscore methods first
 		if(method_exists($this, "_$method")){
+			this->Phase($method);
 			return call_user_func_array([$this, "_$method"],$args);
 		}
 		
@@ -49,7 +52,6 @@ class SenderBlocker{
 		throw new Exception("Bad Method $method");
 		
 	}
-	
 	
 		
 	function Reset(){

@@ -7,5 +7,9 @@
 		"locationId":"",
 		"user":"",
 		"pass":""
+	},
+	"endpoints":{
+		
 	}
+
 }

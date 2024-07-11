@@ -5,5 +5,8 @@
 	"tokens":{
 		"pageId":"", 
 		"systemUserToken":""
+	},
+	"endpoints":{
+		
 	}
 }

@@ -3,9 +3,10 @@ namespace WAASender;
 
 class HttpSender{
 	
-	public function __construct($config=[], $tokens=[]){
-		$this->SetConfig($config);
-		$this->SetTokens($tokens);
+	public function __construct($conf=[], $tok=[], $endp=[]){
+		$this->SetConfig($conf);
+		$this->SetTokens($tok);
+		$this->SetEndpoints($endp);
 	}
 	
 	
@@ -39,6 +40,13 @@ class HttpSender{
 			
 	}
 	
+	// Get Parameteres
+	public function ParamArray($arr){
+		$this->Config(['paramArray'=>$arr]);
+	}
+	public function ParamAppend($str){
+		$this->Config(['paramAppend'=>$str]);
+	}
 	
 	// Content Types
 	public function Urlencoded(){
@@ -192,6 +200,48 @@ class HttpSender{
 		return $this->conf;
 	}
 	
+	private function EndpointInterpolation($endpoint, $args){
+		$tok=$this->Token();
+			unset($tok['defaultTokens']);
+		$conf=$this->Config();
+			unset($conf['defaultConfig']);
+			
+		$sArr=[];
+		$rArr=[];
+		foreach($tok as $k=>$v)
+		{
+			$sArr[]="{#TOKEN-$k}";
+			$rArr[]=$v;
+		}
+		foreach($conf as $k=>$v)
+		{
+			$sArr[]="{#CONFIG-$k}";
+			$rArr[]=$v;
+		}
+		foreach($args as $k=>$v)
+		{
+			$sArr[]="{#$k}";
+			$rArr[]=$v;
+		}
+		
+		return str_replace($sArr, $rArr,$endpoint);
+	}
+	public function Endpoint($oper=null, $args=[]){
+		switch(gettype($oper)){
+			case "string":
+				if($oper === 'defaultEndpoints'){return $this->endp[$oper];}
+				return $this->EndpointInterpolation($this->endp[$oper],$args);
+				break;
+			case "array":
+				foreach($oper as $k=>$v)
+				{
+					$this->endp[$k]=$v;
+				}
+				break;
+		}
+		return $this->endp;
+		
+	}
 	protected function TruthyToken($arr){
 		$this->Token(array_filter($arr, function($a){return $a;}));
 	}
@@ -222,6 +272,8 @@ class HttpSender{
 		'method'=>'GET',
 		'time'=>'',
 		'retType'=>'text',
+		'paramAppend'=>'',
+		'paramArray'=>[],
 		'defaultConfig'=>[
 			'timeout'=>120,
 			'userAgent'=>'genericUA',
@@ -233,7 +285,9 @@ class HttpSender{
 			'method'=>'GET',
 			'time'=>'',
 			'retType'=>'text',
-			
+			'paramAppend'=>'',
+			'paramArray'=>[],
+
 		]
 	];
 	private $tok=[
@@ -254,6 +308,9 @@ class HttpSender{
 			'pass'=>'',
 		]
 	];
+	private $endp=[
+		'defaultEndpoints'=>[]
+	];
 	
 	public function SetConfig($arr){
 		$arr['defaultConfig']=array_merge($this->Config('defaultConfig'), $arr);
@@ -264,10 +321,15 @@ class HttpSender{
 		$arr['defaultTokens']=array_merge($this->Token('defaultTokens'), $arr);
 		$this->Token($arr);
 	}
+	public function SetEndpoints($arr){
+		$arr['defaultEndpoints']=array_merge($this->Endpoint('defaultEndpoints'), $arr);
+		$this->Endpoint($arr);
+	}
 	
 	public function Reset($responses=false){
 		$this->Config($this->Config('defaultConfig'));
 		$this->Token($this->Token('defaultTokens'));
+		$this->Endpoint($this->Endpoint('defaultEndpoints'));
 		if($responses){
 			$this->responseSaves=[];
 		}
@@ -291,8 +353,35 @@ class HttpSender{
 	//////////////////////////////////////////////////
 	// actual sender
 	//////////////////////////////////////////////////
+	
+	protected function ParamParser(&$url, $paramAppend,$paramArr){
+		if($paramAppend){
+			if(!preg_match('/\?/',$url)){
+				$url.="?";
+			}
+			$url.=$paramAppend;
+		}
+		if($paramArray){
+			if(!preg_match('/\?/',$url)){
+				$url.="?";
+			}
+			$arr=[];
+			foreach($paramArray as $k=>$v)
+			{
+				$arr[]=urlencode($k).'='.urlencode($v);
+			}
+			if(!preg_match('/\?$/',$url)){
+				$url.="&";
+			}
+			$url.=join('&',$arr);
+		}
+	}
+	
+	protected $callback=null;
 	static $multiBoundary="WAASenderBoundary-----------------------------------------";
 	public function Go($method, $url, $body=[], $bodyFiles=[]){
+		
+		$this->ParamParser($url, $this->Config('paramAppend'), $this->Config('paramArr'));
 		$this->Config([
 			'url'=>$url,
 			"body"=>$body,
@@ -397,12 +486,26 @@ class HttpSender{
 		$this->PushResponse($ret);
 		
 		$this->Reset();
+		if($this->callback){
+			$this->callback($method, $url, $body, $bodyFiles,$ret);
+		}
 		return $ret;
 	}
 	
 	
 	
 	
+}
+
+trait Phased{
+	protected $currentPhase=false;
+	protected function Phase($phase=null){
+		if(!is_null($phase)){
+			$this->currentPhase=$phase; 
+		}
+		return $this->currentPhase;
+		
+	}
 }
 
 

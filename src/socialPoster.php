@@ -11,7 +11,7 @@ abstract class SocialPoster extends SenderBlocker{
 		"siteBlogViewer" - string - blog article viewer,	
 		"imageFolder"    - string - file-system path to blog image parent folder
 	*/
-	function __construct($confFile, $conf=[], $tok=[]){
+	function __construct($confFile, $conf=[],$tok=[],$endp=[]){
 		// add these to the list of methods expecting a response
 		array_push($this->retRespArr, "Update","Upload","Remove");
 		
@@ -20,8 +20,9 @@ abstract class SocialPoster extends SenderBlocker{
 		$sConf=json_decode(file_get_contents($confFile),true);
 		$blogConfig=json_decode(file_get_contents(self::$blogConfig),true);
 		
-		$conf=array_merge($blogConfig, $sConf['config'],$conf);
-		$tok=array_merge($sConf['tokens'], $tok);
+		$conf=array_merge($conf, $blogConfig, $sConf['config'] ?? []);
+		$tok=array_merge($tok, $sConf['tokens'] ?? []);
+		$endp=array_merge($endp, $sConf['endpoints'] ?? []);
 		
 		parent::__construct($conf, $tok);
 	}
@@ -36,9 +37,11 @@ abstract class SocialPoster extends SenderBlocker{
 		postId   : id of post (for Update and Remove) 
 		
 	*/
-	abstract protected function _Upload($postData,$callback=null);
-	abstract protected function _Remove($postData,$callback=null);
-	abstract protected function _Update($postData,$callback=null);
+	abstract protected function _Upload($postData);
+	abstract protected function _Remove($postData);
+	abstract protected function _Update($postData);
+	
+	
 
 	
 }

@@ -17,23 +17,32 @@ class FacebookSender extends SocialPoster{
 	*/
 	function __construct($credFile=__DIR__.'/conf/fb.json'){
 		parent::__construct($credFile,[
-			'retType'=>'json'
-		]);
+			'retType'=>'json',
+			'version'=>'v20.0'
+		],[],[
+			'upload'=>"https://graph.facebook.com/{#CONFIG-version}/{#TOKEN-pageId}/feed",
+			'scrape'=>"https://graph.facebook.com",
+			'update'=>"https://graph.facebook.com/{#CONFIG-version}/{#0}", // #0 is a post id
+			'remove'=>"https://graph.facebook.com/{#CONFIG-version}/{#0}",
+			'me'=>"https://graph.facebook.com/{#CONFIG-version}/me/accounts"
+		];
+		
 	}
-	protected function _Upload($postData,$callback=null){
+	
+	protected function _Upload($postData){
 		return $this->Post(
-			"https://graph.facebook.com/v20.0/{$this->Token('pageId')}/feed", 
+			$this->Endpoint('upload'), 
 			$this->ComposeRequestBody($postData)
 		);
 		
 	}
-	protected function _Update($postData,$callback=null){
+	protected function _Update($postData){
 		$pageId=$this->Token('pageId');
 		$requestBody=$this->ComposeRequestBody($postData);
 		
 		
 		if($postData['needsScrape'] ?? false){
-			$this->Get("https://graph.facebook.com",[
+			$this->Get($this->Endpoint('scrape'),[
 				'id'=>$requestBody['link'],
 				'scrape'=>'true',
 				'access_token'=>$this->GetAccessToken()
@@ -42,14 +51,14 @@ class FacebookSender extends SocialPoster{
 		
 		
 		return $this->Post(
-			"https://graph.facebook.com/v20.0/$postData[postId]",
+			$this->Endpoint('update',[$postData['postId']]),
 			$requestBody
 		);
 		
 	}
-	protected function _Remove($postData,$callback=null){
+	protected function _Remove($postData){
 		$resp=$this->Delete(
-			"https://graph.facebook.com/v20.0/$postData[postId]",[
+			$this->Endpoint('remove', [$postData['postId']]),[
 				'access_token'=>$this->GetAccessToken()
 			]
 		);
@@ -60,7 +69,7 @@ class FacebookSender extends SocialPoster{
 		if($this->Token('access_token')){
 			return $this->Token('access_token');
 		}
-		$resp=$this->Get("https://graph.facebook.com/v20.0/me/accounts",[
+		$resp=$this->Get($this->Endpoint('me'),[
 			'access_token'=>$this->Token('systemUserToken')
 		]);
 		if(!$resp['success']){
