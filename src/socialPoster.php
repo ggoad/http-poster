@@ -36,9 +36,9 @@ abstract class SocialPoster extends SenderBlocker{
 		postId   : id of post (for Update and Remove) 
 		
 	*/
-	abstract protected function _Upload($postData);
-	abstract protected function _Remove($postData);
-	abstract protected function _Update($postData);
+	abstract protected function _Upload($postData,$callback=null);
+	abstract protected function _Remove($postData,$callback=null);
+	abstract protected function _Update($postData,$callback=null);
 
 	
 }

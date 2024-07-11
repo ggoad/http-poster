@@ -20,14 +20,14 @@ class FacebookSender extends SocialPoster{
 			'retType'=>'json'
 		]);
 	}
-	protected function _Upload($postData){
+	protected function _Upload($postData,$callback=null){
 		return $this->Post(
 			"https://graph.facebook.com/v20.0/{$this->Token('pageId')}/feed", 
 			$this->ComposeRequestBody($postData)
 		);
 		
 	}
-	protected function _Update($postData){
+	protected function _Update($postData,$callback=null){
 		$pageId=$this->Token('pageId');
 		$requestBody=$this->ComposeRequestBody($postData);
 		
@@ -47,7 +47,7 @@ class FacebookSender extends SocialPoster{
 		);
 		
 	}
-	protected function _Remove($postData){
+	protected function _Remove($postData,$callback=null){
 		$resp=$this->Delete(
 			"https://graph.facebook.com/v20.0/$postData[postId]",[
 				'access_token'=>$this->GetAccessToken()

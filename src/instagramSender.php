@@ -22,7 +22,7 @@ class InstagramSender extends SocialPoster{
 	}
 	
 	
-	protected function _Upload($postData){
+	protected function _Upload($postData,$callback=null){
 		$pId=$this->Token('pageId');
 		$body=[
 			'image_url'=>$postData['imageUrl'],
@@ -32,7 +32,7 @@ class InstagramSender extends SocialPoster{
 		
 		return $this->Post("https://graph.facebook.com/v20.0/$pId/media",$body);
 	}
-	protected function _Publish($postData){
+	protected function _Publish($postData,$callback=null){
 		$pId=$this->Token('pageId');
 		
 		$resp=$this->Get("https://graph.facebook.com/v20.0/$postData[postId]/",[
@@ -56,11 +56,11 @@ class InstagramSender extends SocialPoster{
 		]);
 	}
 	
-	protected function _Update($postData){
+	protected function _Update($postData,$callback=null){
 		// instagram does not have an update endpoint
 		return ['success'=>false, 'resp'=>'No Updates from Insta', 'specialMessage'=>'No Updates from Insta'];
 	}
-	protected function _Remove($postData){
+	protected function _Remove($postData,$callback=null){
 		// instagram does not provide a remove endpoint
 		return ['success'=>false, 'resp'=>'No Deletes from Insta', 'specialMessage'=>'No Deletes from Insta'];
 	}

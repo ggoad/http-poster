@@ -11,7 +11,7 @@ class GoogleSender extends SocialPoster{
 		]);
 	}
 	
-	protected function _Upload($postData){
+	protected function _Upload($postData,$callback=null){
 		$accountId=$this->Token('accountId');
 		$locationId=$this->Token('locationId');
 		
@@ -25,7 +25,7 @@ class GoogleSender extends SocialPoster{
 		
 	}
 	
-	protected function _Update($postData){
+	protected function _Update($postData,$callback=null){
 		$postId=$postData['postId'];
 		$accountId=$this->Token('accountId');
 		$locationId=$this->Token('locationId');
@@ -37,7 +37,7 @@ class GoogleSender extends SocialPoster{
 			$this->GenerateRequestBody($postData)
 		);
 	}
-	protected function _Remove($postData){
+	protected function _Remove($postData,$callback=null){
 		$postId=$postData['postId'];
 		$accountId=$this->Token('accountId');
 		$locationId=$this->Token('locationId');

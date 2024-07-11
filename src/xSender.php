@@ -24,11 +24,11 @@ class XSender extends SocialPoster{
 			'retType'=>'json'
 		]);
 	}
-	protected function _Update($postData){
+	protected function _Update($postData,$callback=null){
 		$this->Remove($postData);
 		return $this->Upload($postData);
 	}
-	protected function _Upload($postData){
+	protected function _Upload($postData,$callback=null){
 		$postData['xMediaId']=false;
 		if($postData['imageAbs']){
 			$bodyFiles=[
@@ -52,10 +52,10 @@ class XSender extends SocialPoster{
 		return $this->Json()->Post("https://api.twitter.com/2/tweets",$body);
 		
 	}
-	protected function _Remove($postData){
+	protected function _Remove($postData,$callback=null){
 		return $this->Delete("https://api.twitter.com/2/tweets/$postData[postId]");
 	}
-	protected function CalculateRequestBody($postData){
+	protected function CalculateRequestBody($postData,$callback=null){
 		$ret= [
 			'text'=>$postData['content']
 				."\n\nTo read more, Visit: \n\n"
