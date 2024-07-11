@@ -1,7 +1,7 @@
 <?php
 namespace WAASender;
 
-require_once("socialPoster.php");
+require_once(__DIR__."/socialPoster.php");
 
 
 

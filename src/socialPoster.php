@@ -1,7 +1,7 @@
 <?php 
 namespace WAASender;
 
-require_once("senderBlocker.php");
+require_once(__DIR__."/senderBlocker.php");
 
 
 abstract class SocialPoster extends SenderBlocker{

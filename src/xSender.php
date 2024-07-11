@@ -1,6 +1,6 @@
 <?php 
 namespace WAASender;
-require_once("socialPoster.php");
+require_once(__DIR__."/socialPoster.php");
 
 class XSender extends SocialPoster{
 	/* xCredz:

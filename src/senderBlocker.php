@@ -2,7 +2,7 @@
 
 namespace WAASender;
 
-require_once("httpSender.php");
+require_once(__DIR__."/httpSender.php");
 class SenderBlocker{
 	
 	function __construct($conf=[], $tok=[],$endp=[]){
