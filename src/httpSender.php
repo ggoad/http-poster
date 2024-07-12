@@ -511,16 +511,6 @@ class HttpSender{
 	
 }
 
-trait Phased{
-	protected $currentPhase=false;
-	protected function Phase($phase=null){
-		if(!is_null($phase)){
-			$this->currentPhase=$phase; 
-		}
-		return $this->currentPhase;
-		
-	}
-}
 
 
 ?>

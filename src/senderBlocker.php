@@ -11,7 +11,6 @@ class SenderBlocker{
 		$this->sender=new HttpSender($conf,$tok,$endp);
 	}
 	
-	use Phased;
 	
 	protected $nullClass;
 	protected $sender;
@@ -39,7 +38,6 @@ class SenderBlocker{
 		
 		// checks for underscore methods first
 		if(method_exists($this, "_$method")){
-			this->Phase($method);
 			return call_user_func_array([$this, "_$method"],$args);
 		}
 		
