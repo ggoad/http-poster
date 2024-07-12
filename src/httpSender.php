@@ -505,7 +505,7 @@ class HttpSender{
 		
 		$this->Reset();
 		if($this->responseCallback){
-			$this->responseCallback($this, $method, $url, $body, $bodyFiles,$ret);
+			call_user_func($this->responseCallback,$this, $method, $url, $body, $bodyFiles,$ret);
 		}
 		return $ret;
 	}
