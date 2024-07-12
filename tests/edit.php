@@ -23,7 +23,7 @@ $instaSender=new InstagramSender();
 $xSender=new XSender();
 $googleSender=new GoogleSender();
 
-$uploadPostResults=json_decode(file_get_contents('uploadSocialResults.json'), true);
+$uploadPostResults=json_decode(file_get_contents('output/uploadSocialResults.json'), true);
 
 $result=$fbSender->Update(array_merge($articleInfo,[
 	'postId'=>$uploadPostResults['fb']['id'] ?? ''
@@ -34,7 +34,7 @@ $result=$fbSender->Update(array_merge($articleInfo,[
 	$socialResponses['fb']=$result['resp'];
 
 $result=$xSender->Update(array_merge($articleInfo,[
-	'postId'=>$uploadPostResults['x']['data']['id']
+	'postId'=>$uploadPostResults['x']['data']['id'] ?? '0'
 ]));
 
 	$result['allResponses']=$xSender->GetAllResponses();
@@ -45,8 +45,8 @@ $rawJsn=json_encode($raw,JSON_PRETTY_PRINT);
 $socialResponsesJsn=json_encode($socialResponses,JSON_PRETTY_PRINT);
 
 
-	file_put_contents("updateRawResults.json", $rawJsn);
-	file_put_contents("updateSocialResults.json", $socialResponsesJsn);
+	OutputTestResults("updateRawResults.json", $rawJsn);
+	OutputTestResults("updateSocialResults.json", $socialResponsesJsn);
 ?><!DOCTYPE html>
 <html>
 <head>

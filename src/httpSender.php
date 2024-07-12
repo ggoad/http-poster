@@ -204,19 +204,23 @@ class HttpSender{
 	
 	private function EndpointInterpolation($endpoint, $args){
 		$tok=$this->Token();
-			unset($tok['defaultTokens']);
 		$conf=$this->Config();
-			unset($conf['defaultConfig']);
 			
 		$sArr=[];
 		$rArr=[];
 		foreach($tok as $k=>$v)
 		{
+			if(!is_string($v)){
+				continue;
+			}
 			$sArr[]="{#TOKEN-$k}";
 			$rArr[]=$v;
 		}
 		foreach($conf as $k=>$v)
 		{
+			if(!is_string($v)){
+				continue;
+			}
 			$sArr[]="{#CONFIG-$k}";
 			$rArr[]=$v;
 		}
@@ -234,7 +238,7 @@ class HttpSender{
 			$prArr[]=$v;
 		}
 		
-		
+		//die($endpoint, );
 		return preg_replace($psArr,$prArr,str_replace($sArr, $rArr,$endpoint));
 	}
 	public function Endpoint($oper=null, ...$args){
@@ -368,7 +372,7 @@ class HttpSender{
 	// actual sender
 	//////////////////////////////////////////////////
 	
-	protected function ParamParser(&$url, $paramAppend,$paramArr){
+	protected function ParamParser(&$url, $paramAppend,$paramArray){
 		if($paramAppend){
 			if(!preg_match('/\?/',$url)){
 				$url.="?";
@@ -391,11 +395,11 @@ class HttpSender{
 		}
 	}
 	
-	protected $callback=null;
+	protected $responseCallback=null;
 	static $multiBoundary="WAASenderBoundary-----------------------------------------";
 	public function Go($method, $url, $body=[], $bodyFiles=[]){
 		
-		$this->ParamParser($url, $this->Config('paramAppend'), $this->Config('paramArr'));
+		$this->ParamParser($url, $this->Config('paramAppend'), $this->Config('paramArray'));
 		$this->Config([
 			'url'=>$url,
 			"body"=>$body,
@@ -500,8 +504,8 @@ class HttpSender{
 		$this->PushResponse($ret);
 		
 		$this->Reset();
-		if($this->callback){
-			$this->callback($method, $url, $body, $bodyFiles,$ret);
+		if($this->responseCallback){
+			$this->responseCallback($this, $method, $url, $body, $bodyFiles,$ret);
 		}
 		return $ret;
 	}

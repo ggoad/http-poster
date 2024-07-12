@@ -12,7 +12,7 @@ $socialResponses=[];
 
 $instaSender=new InstagramSender();
 
-$uploadResults=json_decode(file_get_contents("uploadSocialResults.json"), true);
+$uploadResults=json_decode(file_get_contents("output/uploadSocialResults.json"), true);
 	
 
 $result=$instaSender->Publish([
@@ -27,8 +27,8 @@ $result=$instaSender->Publish([
 $rawJsn=json_encode($raw,JSON_PRETTY_PRINT);
 $socialResponsesJsn=json_encode($socialResponses,JSON_PRETTY_PRINT);
 
-	file_put_contents("publisRawResults.json", $rawJsn);
-	file_put_contents("publishSocialResults.json", $socialResponsesJsn);
+	OutputTestResults("publisRawResults.json", $rawJsn);
+	OutputTestResults("publishSocialResults.json", $socialResponsesJsn);
 ?><!DOCTYPE html>
 <html>
 <head>

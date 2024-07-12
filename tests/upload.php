@@ -48,8 +48,8 @@ $rawJsn=json_encode($raw,JSON_PRETTY_PRINT);
 $jsnError=json_last_error_msg();
 $socialResponsesJsn=json_encode($socialResponses,JSON_PRETTY_PRINT);
 
-	file_put_contents("uploadRawResults.json", $rawJsn);
-	file_put_contents("uploadSocialResults.json", $socialResponsesJsn);
+	OutputTestResults("uploadRawResults.json", $rawJsn);
+	OutputTestResults("uploadSocialResults.json", $socialResponsesJsn);
 ?><!DOCTYPE html>
 <html>
 <head>

@@ -21,8 +21,8 @@ $instaSender=new InstagramSender();
 $xSender=new XSender();
 $googleSender=new GoogleSender();
 
-$uploadPostResults=json_decode(file_get_contents('uploadSocialResults.json'), true);
-$editPostResults=json_decode(file_get_contents('updateSocialResults.json'), true);
+$uploadPostResults=json_decode(file_get_contents('output/uploadSocialResults.json'), true);
+$editPostResults=json_decode(file_get_contents('output/updateSocialResults.json'), true);
 
 
 $result=$fbSender->Remove([
@@ -46,8 +46,8 @@ $rawJsn=json_encode($raw,JSON_PRETTY_PRINT);
 $socialResponsesJsn=json_encode($socialResponses,JSON_PRETTY_PRINT);
 
 
-	file_put_contents("deleteRawResults.json", $rawJsn);
-	file_put_contents("deleteSocialResults.json", $socialResponsesJsn);
+	OutputTestResults("deleteRawResults.json", $rawJsn);
+	OutputTestResults("deleteSocialResults.json", $socialResponsesJsn);
 ?><!DOCTYPE html>
 <html>
 <head>

@@ -24,7 +24,7 @@ abstract class SocialPoster extends SenderBlocker{
 		$tok=array_merge($tok, $sConf['tokens'] ?? []);
 		$endp=array_merge($endp, $sConf['endpoints'] ?? []);
 		
-		parent::__construct($conf, $tok);
+		parent::__construct($conf, $tok,$endp);
 	}
 		
 		static $blogConfig=__DIR__."/conf/blog.json";

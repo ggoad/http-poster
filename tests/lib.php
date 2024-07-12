@@ -17,3 +17,7 @@ function GetArticleInfo($edit=false){
 	}
 	return $articleInfo;
 }
+function OutputTestResults($f, $content){
+	@mkdir("output");
+	file_put_contents("output/$f", $content);
+}
