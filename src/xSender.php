@@ -18,7 +18,7 @@ class XSender extends SocialPoster{
 				
 		*/
 	function __construct($credFile=__DIR__.'/conf/x.json'){
-		
+		 
 		parent::__construct($credFile,[
 			'authorization'=>'oauth1',
 			'retType'=>'json'

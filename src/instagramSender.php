@@ -28,6 +28,7 @@ class InstagramSender extends SocialPoster{
 	
 	
 	protected function _Upload($postData){
+		
 		$pId=$this->Token('pageId');
 		$body=[
 			'image_url'=>$postData['imageUrl'],
@@ -38,6 +39,7 @@ class InstagramSender extends SocialPoster{
 		return $this->Post($this->Endpoint('upload'),$body);
 	}
 	protected function _Publish($postData){
+		
 		$pId=$this->Token('pageId');
 		
 		$resp=$this->Get($this->Endpoint('status',$postData['postId']),[
