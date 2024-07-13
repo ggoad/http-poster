@@ -46,10 +46,9 @@ class XSender extends SocialPoster{
 				$bodyFiles
 			);
 			
-			if(!($resp['resp']['media_id'] ?? false)){
-				return $this->Eject('Media upload fail');
+			if(($resp['resp']['media_id'] ?? false)){			
+				$postData['xMediaId']=$resp['resp']['media_id'];
 			}
-			$postData['xMediaId']=$resp['resp']['media_id'];
 		}
 		$body=$this->CalculateRequestBody($postData);
 		
