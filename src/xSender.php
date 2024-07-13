@@ -33,17 +33,9 @@ class XSender extends SocialPoster{
 		return $this->Upload($postData);
 	}
 	
-	protected function _UploadMedia(&$postData, $noEjectOnFail=false){
-		$bodyFiles=[
-			'media'=>[
-				'imgLoc'=>$this->Config('imageFolder').$postData['imageAbs']
-			]
-		];
-		$resp=$this->MultiPart()->Post(
-			$this->Endpoint('imageUpload'),
-			[],
-			$bodyFiles
-		);
+	protected function UploadMediaRef(&$postData, $noEjectOnFail=false){
+		
+		$resp=$this->UploadMedia($postData);
 		if(!($resp['resp']['media_id'] ?? false)){
 			if($noEjectOnFail){
 				return $resp;
@@ -53,10 +45,23 @@ class XSender extends SocialPoster{
 		$postData['xMediaId']=$resp['resp']['media_id'];
 		return $resp;
 	}
+	protected function _UploadMedia($postData){
+		$bodyFiles=[
+			'media'=>[
+				'imgLoc'=>$this->Config('imageFolder').$postData['imageAbs']
+			]
+		];
+		return $this->MultiPart()->Post(
+			$this->Endpoint('imageUpload'),
+			[],
+			$bodyFiles
+		);
+		
+	}
 	protected function _Upload($postData){
 		$postData['xMediaId']=false;
-		if($postData['imageAbs']){
-			$this->UploadMedia($postData, true);
+		if($postData['imageAbs'] && !$this->eject){
+			$this->UploadMediaRef($postData, true);
 			
 		}
 		$body=$this->CalculateRequestBody($postData);
