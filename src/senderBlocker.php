@@ -9,6 +9,9 @@ class SenderBlocker{
 		$this->nullClass=new NullClass($this);
 		
 		$this->sender=new HttpSender($conf,$tok,$endp);
+		if($this->responseCallback ?? false){
+			$this->sender->responseCallback=$this->responseCallback;
+		}
 	}
 	
 	
