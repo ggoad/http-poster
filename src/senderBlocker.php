@@ -28,6 +28,14 @@ class SenderBlocker{
 		protected $retRespArr=["Go","Post","Get","Patch","Delete","Put","Delete"];
 	
 	function __call($method, $args){
+		// white listed functions even on eject
+		if(array_search($method, ["Config","Token", "Endpoint", "SetConfig","SetTokens","SetEndpoints"]) > -1){
+			return call_user_func_array([$this->sender,$method],$args);
+		}
+		if(array_search($method, ["Reset"])>-1){
+			return call_user_func_array([$this, $method],$args);
+		}
+		// end white list
 		
 		// return a response if necesary, or the null class
 		if(!$this->sender->Config('active') || $this->eject){

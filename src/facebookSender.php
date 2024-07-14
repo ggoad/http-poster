@@ -30,6 +30,7 @@ class FacebookSender extends SocialPoster{
 	}
 	
 	protected function _Upload($postData){
+		
 		return $this->Post(
 			$this->Endpoint('upload'), 
 			$this->ComposeRequestBody($postData)

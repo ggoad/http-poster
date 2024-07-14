@@ -502,11 +502,12 @@ class HttpSender{
 		}
 		
 		$this->PushResponse($ret);
-		
-		$this->Reset();
 		if($this->responseCallback){
 			call_user_func($this->responseCallback,$this, $method, $url, $body, $bodyFiles,$ret);
 		}
+		
+		$this->Reset();
+		
 		return $ret;
 	}
 	
