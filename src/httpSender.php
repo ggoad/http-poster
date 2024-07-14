@@ -395,7 +395,7 @@ class HttpSender{
 		}
 	}
 	
-	protected $responseCallback;
+	public $responseCallback;
 	static $multiBoundary="WAASenderBoundary-----------------------------------------";
 	public function Go($method, $url, $body=[], $bodyFiles=[]){
 		
