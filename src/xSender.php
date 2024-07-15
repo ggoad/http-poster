@@ -73,10 +73,16 @@ class XSender extends SocialPoster{
 		return $this->Delete($this->Endpoint('delete', $postData['postId']));
 	}
 	protected function CalculateRequestBody($postData){
+		$app="\n\nTo read more, Visit: \n\n".$this->Config('siteBlogViewer').$postData['slug'];
+		$appLen=strlen($app);
+		$bod=substr($postData['content'],0,280-$appLen);
+
+		$bod=preg_replace('/[^\.\?]*$/s',"", $bod);
+		
+		
+		
 		$ret= [
-			'text'=>$postData['content']
-				."\n\nTo read more, Visit: \n\n"
-				.$this->Config('siteBlogViewer').$postData['slug'],
+			'text'=>$bod.$app,
 		];
 		
 		if($postData['xMediaId']){
