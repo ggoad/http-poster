@@ -24,4 +24,7 @@ $xSender=new XSender();
 $googleSender=new GoogleSender();
 
 ?>
-OK
+OK<br><br>
+<a href="googleAuthorize.php"><button>Google Authorize</button></a>
+<br><br>
+<a href="upload.php"><button>Upload</button></a>

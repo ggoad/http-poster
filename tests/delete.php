@@ -40,6 +40,14 @@ $result=$xSender->Remove([
 	$result['allResponses']=$xSender->GetAllResponses();
 	$raw['x']=$result;
 	$socialResponses['x']=$result['resp'];
+	
+$result=$googleSender->Remove([
+	'postId'=>$uploadPostResults['google']['name'] ?? ''
+]);
+
+	$result['allResponses']=$googleSender->GetAllResponses();
+	$raw['google']=$result;
+	$socialResponses['google']=$result['resp'];
 
 
 $rawJsn=json_encode($raw,JSON_PRETTY_PRINT);

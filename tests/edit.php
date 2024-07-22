@@ -41,6 +41,15 @@ $result=$xSender->Update(array_merge($articleInfo,[
 	$raw['x']=$result;
 	$socialResponses['x']=$result['resp'];
 
+$result=$googleSender->Update(array_merge($articleInfo,[
+	'postId'=>$uploadPostResults['google']['name'] ?? '0'
+]));
+
+	$result['allResponses']=$googleSender->GetAllResponses();
+	$raw['google']=$result;
+	$socialResponses['google']=$result['resp'];
+
+
 $rawJsn=json_encode($raw,JSON_PRETTY_PRINT);
 $socialResponsesJsn=json_encode($socialResponses,JSON_PRETTY_PRINT);
 

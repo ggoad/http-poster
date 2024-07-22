@@ -7,14 +7,15 @@ class GoogleSender extends SocialPoster{
 	function __construct($credFile=__DIR__.'/conf/google.json'){
 		parent::__construct($credFile,[
 			'retType'=>'json',
+			'contentType'=>'json',
 			'authorization'=>'bearer'
 		],[
 			
 		],[
-			'auth'=>'https://oath2.googleapis.com/token',
+			'auth'=>'https://oauth2.googleapis.com/token',
 			'upload'=>"https://mybusiness.googleapis.com/v4/accounts/{#TOKEN-accountId}/locations/{#TOKEN-locationId}/localPosts",
-			'update'=>"https://mybusiness.googleapis.com/v4/accounts/{#TOKEN-accountId}/locations/{#TOKEN-locationId}/localPosts/{#0-postId}",
-			'delete'=>"https://mybusiness.googleapis.com/v4/accounts/{#TOKEN-accountId}/locations/{#TOKEN-locationId}/localPosts/{#0-postId}"
+			'update'=>"https://mybusiness.googleapis.com/v4/{#0-postId}",
+			'delete'=>"https://mybusiness.googleapis.com/v4/{#0-postId}"
 		],[
 			'aud'=>'https://oauth2.googleapis.com/token', 
 			"scope"=>"https://www.googleapis.com/auth/business.manage"
@@ -34,20 +35,20 @@ class GoogleSender extends SocialPoster{
 			return false;
 		}
 		$this->Token([
-			'bearer'=>$tokInfo['token']
+			'bearer'=>$tokInfo['access_token']
 		]);
 		return true;
 		
 	}
 	const googleAuthFile=__DIR__.'/conf/googleAuth.json';
 	protected function GrabServiceUserToken(){
-		$resp=$this->None()->Post($this->Endpoint('auth'),[
+		$resp=$this->None()->Urlencoded()->Post($this->Endpoint('auth'),[
 			"grant_type"=>"urn:ietf:params:oauth:grant-type:jwt-bearer",
 			"assertion"=>$this->JWTStr()
 		]);
 		
 		if($resp['success']){
-			$this->Token(['bearer'=>$resp['resp']['access_token']])['bearer'];
+			$this->Token(['bearer'=>$resp['resp']['access_token']]);
 			return true;
 		}
 		$this->Eject('Unable to aquire bearer token');
@@ -113,7 +114,7 @@ class GoogleSender extends SocialPoster{
 			"media" => [
 				[
 				  "mediaFormat" => "PHOTO",
-				  "sourceUrl" => $postData['imgUrl'],
+				  "sourceUrl" => $postData['imageUrl'],
 				]
 			]
 			
