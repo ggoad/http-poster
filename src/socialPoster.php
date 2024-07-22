@@ -11,7 +11,7 @@ abstract class SocialPoster extends SenderBlocker{
 		"siteBlogViewer" - string - blog article viewer,	
 		"imageFolder"    - string - file-system path to blog image parent folder
 	*/
-	function __construct($confFile, $conf=[],$tok=[],$endp=[]){
+	function __construct($confFile, $conf=[],$tok=[],$endp=[], $jwt=[]){
 		// add these to the list of methods expecting a response
 		array_push($this->retRespArr, "Update","Upload","Remove");
 		
@@ -23,8 +23,9 @@ abstract class SocialPoster extends SenderBlocker{
 		$conf=array_merge($conf, $blogConfig, $sConf['config'] ?? []);
 		$tok=array_merge($tok, $sConf['tokens'] ?? []);
 		$endp=array_merge($endp, $sConf['endpoints'] ?? []);
+		$jwt=array_merge($jwt, $sConf['jwtClaims'] ?? []);
 		
-		parent::__construct($conf, $tok,$endp);
+		parent::__construct($conf, $tok, $endp, $jwt);
 	}
 		
 		static $blogConfig=__DIR__."/conf/blog.json";

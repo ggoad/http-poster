@@ -3,10 +3,11 @@ namespace WAASender;
 
 class HttpSender{
 	
-	public function __construct($conf=[], $tok=[], $endp=[]){
+	public function __construct($conf=[], $tok=[], $endp=[], $jwt=[]){
 		$this->SetConfig($conf);
 		$this->SetTokens($tok);
 		$this->SetEndpoints($endp);
+		$this->SetJWTClaims($jwt);
 	}
 	
 	
@@ -160,6 +161,61 @@ class HttpSender{
 		protected function GenerateNonce(){
 			$this->Config(['nonce'=>"".bin2hex(random_bytes(16))]);
 		}
+		
+		protected function JWTHeaderOb(){
+			$ret=[
+				'alg'=>$this->Config('jwtSigAlgo'),
+				'typ'=>$this->Config('jwtTyp')
+			];
+			$tok=$this->Token('jwtKeyId');
+			if($tok){
+				$ret['kid']=$tok;
+			}
+			return $this->base64url_encode(
+				json_encode([
+					$ret
+				])
+			);
+		}
+		protected function JWTClaimOb($perOb=[]){
+			$t=time();
+			return $this->base64url_encode(
+				json_encode(
+					array_filter(
+						array_merge(
+							$this->Config('jwtClaims'),
+							[
+								'iat'=>$t,
+								'exp'=>$t+$this->Config('jwtValidLength')
+							],
+							$perOb
+						), 
+						function($m){return !is_null($m);}
+					)
+				)
+			);
+		}
+		protected function JWTSignature($prep){
+			switch($this->Config('jwtSigAlgo')){
+				case "RS256":
+					openssl_sign($prep, $signature, $this->Token('jwtPrivateKey'),OPENSSL_ALGO_SHA256);
+					break;
+			}
+			return $this->base64url_encode($signature);
+		}
+		protected function JWTStr($perOb=[]){
+			$header=$this->JWTHeaderOb();
+			$claim=$this->JWTClaimOb($perOb);
+			
+			$prep="$header.$claim";
+			
+			$signature=$this->JWTSignature($prep);
+			return "$prep.$signature";
+			
+		}
+		protected function base64url_encode($str){
+			return rtrim(strtr(base64_encode($str),'+/','-_'),'=');
+		}
 
 	// gets the auth header when sending
 	protected function AuthHeader(){
@@ -238,7 +294,7 @@ class HttpSender{
 			$prArr[]=$v;
 		}
 		
-		//die($endpoint, );
+		
 		return preg_replace($psArr,$prArr,str_replace($sArr, $rArr,$endpoint));
 	}
 	public function Endpoint($oper=null, ...$args){
@@ -278,6 +334,20 @@ class HttpSender{
 		return $this->tok;
 		
 	}
+	public function JWTClaim($oper){
+		switch(gettype($oper)){
+			case "string":
+				return $this->jwtClm[$oper] ?? null;
+				break;
+			case "array":
+				foreach($oper as $k=>$v)
+				{
+					$this->jwtClm[$k]=$v;
+				}
+				break;
+		}
+		return $this->jwtClm;
+	}
 	
 	private $conf=[
 		'timeout'=>120,
@@ -285,6 +355,9 @@ class HttpSender{
 		'contentType'=>'urlencoded',
 		'authorization'=>'none',
 		'signatureMethod'=>'HMAC-SHA1',
+		'jwtSigAlgo'=>'RS256',
+		'jwtTyp'=>'JWT',
+		'jwtValidLength'=>3600000,
 		'url'=>'',
 		'body'=>[],
 		'method'=>'GET',
@@ -298,6 +371,9 @@ class HttpSender{
 			'contentType'=>'urlencoded',
 			'authorization'=>'none',
 			'signatureMethod'=>'HMAC-SHA1',
+			'jwtSigAlgo'=>'RS256',
+			'jwtTyp'=>'JWT',
+			'jwtValidLength'=>3600000,
 			'url'=>'',
 			'body'=>[],
 			'method'=>'GET',
@@ -316,6 +392,8 @@ class HttpSender{
 		'accessSecret'=>'',
 		'user'=>'',
 		'pass'=>'',
+		'jwtKeyId'=>'',
+		'jwtPrivateKey'=>'',
 		'defaultTokens'=>[
 			'bearer'=>'',
 			'consumerKey'=>'',
@@ -324,11 +402,32 @@ class HttpSender{
 			'accessSecret'=>'',
 			'user'=>'',
 			'pass'=>'',
+			'jwtKeyId'=>'',
+			'jwtPrivateKey'=>'',
 		]
 	];
 	private $endp=[
 		'defaultEndpoints'=>[]
 	];
+	private $jwtClm=[
+		'iss'=>null,	//	issuer
+		'sub'=>null,	//	subject 
+		'aud'=>null,	//	audienc
+		'exp'=>null,	//	expirationTime
+		'nbf'=>null,	//	not before time
+		'iat'=>null,	//	issued at time
+		'jti'=>null		//	unique identifier
+		'defaultClaims'=>[
+			'iss'=>null,	//	issuer
+			'sub'=>null,	//	subject 
+			'aud'=>null,	//	audienc
+			'exp'=>null,	//	expirationTime
+			'nbf'=>null,	//	not before time
+			'iat'=>null,	//	issued at time
+			'jti'=>null		//	unique identifier
+		]
+	];
+	
 	
 	public function SetConfig($arr){
 		$arr['defaultConfig']=array_merge($this->Config('defaultConfig'), $arr);
@@ -343,11 +442,16 @@ class HttpSender{
 		$arr['defaultEndpoints']=array_merge($this->Endpoint('defaultEndpoints'), $arr);
 		$this->Endpoint($arr);
 	}
+	public function SetJWTClaims($arr){
+		$arr['defaultClaims']=array_merge($this->JWTClaim('defaultClaims');
+		$this->JWTClaim($arr);
+	}
 	
 	public function Reset($responses=false){
 		$this->Config($this->Config('defaultConfig'));
 		$this->Token($this->Token('defaultTokens'));
 		$this->Endpoint($this->Endpoint('defaultEndpoints'));
+		$this->JWTClaim($this->JWTClaim('defaultClaims'));
 		if($responses){
 			$this->responseSaves=[];
 		}

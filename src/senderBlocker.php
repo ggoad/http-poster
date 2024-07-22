@@ -5,10 +5,10 @@ namespace WAASender;
 require_once(__DIR__."/httpSender.php");
 class SenderBlocker{
 	
-	function __construct($conf=[], $tok=[],$endp=[]){
+	function __construct($conf=[], $tok=[],$endp=[], $jwt=[]){
 		$this->nullClass=new NullClass($this);
 		
-		$this->sender=new HttpSender($conf,$tok,$endp);
+		$this->sender=new HttpSender($conf,$tok,$endp, $jwt);
 		if($this->responseCallback ?? false){
 			$this->sender->responseCallback=$this->responseCallback;
 		}
