@@ -109,7 +109,7 @@ class GoogleSender extends SocialPoster{
 			"summary" => $postData['content'],
 			"callToAction" => [
 				"actionType" => "LEARN_MORE",
-				"url" => $this->Config('site').'/'.$postData['slug'],
+				"url" => $this->Config('siteBlogViewer').$postData['slug'],
 			],
 			"media" => [
 				[
