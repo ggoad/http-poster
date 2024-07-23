@@ -110,15 +110,18 @@ class GoogleSender extends SocialPoster{
 			"callToAction" => [
 				"actionType" => "LEARN_MORE",
 				"url" => $this->Config('siteBlogViewer').$postData['slug'],
-			],
-			"media" => [
+			]
+			
+		];
+		if($postData['imageUrl']){
+			$body['media']=[
 				[
 				  "mediaFormat" => "PHOTO",
 				  "sourceUrl" => $postData['imageUrl'],
 				]
-			]
-			
-		];
+			];
+		}
+		
 		if($init){
 			$body["topicType"]="STANDARD";
 			
