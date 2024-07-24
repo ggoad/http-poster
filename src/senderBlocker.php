@@ -32,7 +32,7 @@ class SenderBlocker{
 	
 	function __call($method, $args){
 		// white listed functions even on eject
-		if(array_search($method, ["Config","Token", "Endpoint", "SetConfig","SetTokens","SetEndpoints"]) > -1){
+		if(array_search($method, ["Config","Token", "Endpoint", "JWTClaim", "SetConfig","SetTokens","SetEndpoints", "SetJWTClaims"]) > -1){
 			return call_user_func_array([$this->sender,$method],$args);
 		}
 		if(array_search($method, ["Reset"])>-1){
